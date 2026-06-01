@@ -1,11 +1,22 @@
 # 运维决策后端服务
 
-这是一个基于 `Java 8 + Spring Boot 2.7 + Maven` 的运维决策后端服务，覆盖飞机维修与设备维修两类业务流程。
+这是一个基于 `Java 8 + Spring Boot 2.7 + Maven` 的运维决策后端示例项目，覆盖飞机维修和设备检修两类场景。
 
-## 能力范围
+## 当前交互模式
 
-- 飞机维修：飞机状态与履历、MEL 放行判断、环境感知、AMM/知识库、知识图谱、人员画像、航材工具库存、诊断结论、处置决策
-- 设备维修：数字孪生、实时数据、历史案例、变更关联、人员画像、备件工具库存、诊断结论、处置决策
+项目中的飞机和设备 workflow 已统一为四阶段：
+
+1. 澄清
+2. 检索
+3. 执行
+4. 反馈
+
+### 四阶段说明
+
+- 澄清：只展示基础信息，并明确告知“接下来会深挖历史/变更/资源事实后再生成方案”，等待用户确认。
+- 检索：自动深挖必要事实，不再向用户发起二次确认；返回压缩版关键字段，直接展示。
+- 执行：展示检索到的关键信息，并给出 `2-3` 个方案供用户选择。
+- 反馈：根据用户选定的方案，返回最终执行回执。
 
 ## 项目结构
 
@@ -21,14 +32,7 @@
     └── main/resources/datasets/
 ```
 
-## 依赖与启动
-
-优先使用项目内的 `mvnw.cmd`。这个脚本会按下面顺序查找 Maven：
-
-1. 环境变量 `OPS_MAVEN_CMD`
-2. `D:\maven\apache-maven-3.9.9\bin\mvn.cmd`
-3. `MAVEN_HOME\bin\mvn.cmd`
-4. `PATH` 中的 `mvn.cmd` 或 `mvn`
+## 启动方式
 
 ### Windows
 
@@ -51,49 +55,112 @@ chmod +x mvnw
 - Swagger UI：[http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
 - OpenAPI JSON：[http://localhost:8080/v3/api-docs](http://localhost:8080/v3/api-docs)
 
-## 示例接口
+## 核心接口
 
-### 飞机维修
+### 飞机
 
 ```powershell
 curl "http://localhost:8080/api/v1/aircraft/B-1234/status-history"
-curl "http://localhost:8080/api/v1/aircraft/B-1234/mel-release?component=%E5%B7%A6%E4%B8%BB%E8%B5%B7%E8%90%BD%E6%9E%B6%E5%87%8F%E9%9C%87%E6%94%AF%E6%9F%B1&leakAreaCm2=15&continuousDrip=false"
 curl "http://localhost:8080/api/v1/aircraft/B-1234/environment"
-curl -X POST "http://localhost:8080/api/v1/aircraft/B-1234/diagnosis-conclusion" -H "Content-Type: application/json" -d "{\"leakAreaCm2\":15,\"continuousDrip\":false,\"repairTarget\":\"完全修复\"}"
-curl -X POST "http://localhost:8080/api/v1/aircraft/B-1234/disposition-decision" -H "Content-Type: application/json" -d "{\"leakAreaCm2\":15,\"continuousDrip\":false,\"repairTarget\":\"完全修复\"}"
+curl "http://localhost:8080/api/v1/aircraft/B-1234/mel-release?component=%E5%B7%A6%E4%B8%BB%E8%B5%B7%E8%90%BD%E6%9E%B6%E5%87%8F%E9%9C%87%E6%94%AF%E6%9F%B1&leakAreaCm2=8&continuousDrip=false"
 ```
 
-### 三阶段互动流程
-
-飞机和设备都新增了固定的三阶段 workflow 接口：
-
-1. 检索：先列出已确认信息、用户意图和待补充项
-2. 执行：给出 2-3 个可选方案并标出推荐项
-3. 反馈：基于用户选定方案给出最终执行方案
-
-#### 飞机 workflow
-
-```powershell
-curl -X POST "http://localhost:8080/api/v1/aircraft/B-1234/workflow/retrieval" -H "Content-Type: application/json" -d "{}"
-curl -X POST "http://localhost:8080/api/v1/aircraft/B-1234/workflow/execution" -H "Content-Type: application/json" -d "{\"leakAreaCm2\":8,\"continuousDrip\":false,\"repairTarget\":\"保留放行\",\"userIntent\":\"尽快放行后再安排窗口期维修\"}"
-curl -X POST "http://localhost:8080/api/v1/aircraft/B-1234/workflow/feedback" -H "Content-Type: application/json" -d "{\"leakAreaCm2\":8,\"continuousDrip\":false,\"repairTarget\":\"保留放行\",\"userIntent\":\"尽快放行后再安排窗口期维修\",\"selectedOptionCode\":\"B\"}"
-```
-
-### 设备维修
+### 设备
 
 ```powershell
 curl "http://localhost:8080/api/v1/equipment/MOT-2024-A07/digital-twin"
 curl "http://localhost:8080/api/v1/equipment/MOT-2024-A07/telemetry"
 curl "http://localhost:8080/api/v1/equipment/MOT-2024-A07/historical-cases"
-curl -X POST "http://localhost:8080/api/v1/equipment/MOT-2024-A07/diagnosis-conclusion" -H "Content-Type: application/json" -d "{\"currentTemperatureC\":92,\"vibrationMmPerS\":4.2,\"temperatureRiseRatePerMin\":2.3}"
-curl -X POST "http://localhost:8080/api/v1/equipment/MOT-2024-A07/disposition-decision" -H "Content-Type: application/json" -d "{\"immediateShutdown\":true,\"reserveBearing\":true,\"pushWorkOrder\":true}"
-curl -X POST "http://localhost:8080/api/v1/equipment/MOT-2024-A07/workflow/retrieval" -H "Content-Type: application/json" -d "{}"
-curl -X POST "http://localhost:8080/api/v1/equipment/MOT-2024-A07/workflow/execution" -H "Content-Type: application/json" -d "{\"userIntent\":\"控制风险，必要时立即停机\"}"
-curl -X POST "http://localhost:8080/api/v1/equipment/MOT-2024-A07/workflow/feedback" -H "Content-Type: application/json" -d "{\"userIntent\":\"控制风险，必要时立即停机\",\"selectedOptionCode\":\"A\"}"
+```
+
+## 四阶段 workflow 示例
+
+### 飞机 workflow
+
+#### 1. 澄清
+
+```powershell
+curl -X POST "http://localhost:8080/api/v1/aircraft/B-1234/workflow/clarify" `
+  -H "Content-Type: application/json" `
+  -d "{}"
+```
+
+确认后：
+
+```powershell
+curl -X POST "http://localhost:8080/api/v1/aircraft/B-1234/workflow/clarify" `
+  -H "Content-Type: application/json" `
+  -d "{\"basicInfoConfirmed\":true,\"followUpAcknowledged\":true}"
+```
+
+#### 2. 检索
+
+```powershell
+curl -X POST "http://localhost:8080/api/v1/aircraft/B-1234/workflow/retrieval" `
+  -H "Content-Type: application/json" `
+  -d "{\"basicInfoConfirmed\":true,\"followUpAcknowledged\":true,\"continuousDrip\":false}"
+```
+
+#### 3. 执行
+
+```powershell
+curl -X POST "http://localhost:8080/api/v1/aircraft/B-1234/workflow/execution" `
+  -H "Content-Type: application/json" `
+  -d "{\"basicInfoConfirmed\":true,\"followUpAcknowledged\":true,\"continuousDrip\":false,\"repairTarget\":\"保留放行\",\"userIntent\":\"尽快恢复运行\"}"
+```
+
+#### 4. 反馈
+
+```powershell
+curl -X POST "http://localhost:8080/api/v1/aircraft/B-1234/workflow/feedback" `
+  -H "Content-Type: application/json" `
+  -d "{\"basicInfoConfirmed\":true,\"followUpAcknowledged\":true,\"continuousDrip\":false,\"repairTarget\":\"保留放行\",\"userIntent\":\"尽快恢复运行\",\"selectedOptionCode\":\"B\"}"
+```
+
+### 设备 workflow
+
+#### 1. 澄清
+
+```powershell
+curl -X POST "http://localhost:8080/api/v1/equipment/MOT-2024-A07/workflow/clarify" `
+  -H "Content-Type: application/json" `
+  -d "{}"
+```
+
+确认后：
+
+```powershell
+curl -X POST "http://localhost:8080/api/v1/equipment/MOT-2024-A07/workflow/clarify" `
+  -H "Content-Type: application/json" `
+  -d "{\"basicInfoConfirmed\":true,\"followUpAcknowledged\":true}"
+```
+
+#### 2. 检索
+
+```powershell
+curl -X POST "http://localhost:8080/api/v1/equipment/MOT-2024-A07/workflow/retrieval" `
+  -H "Content-Type: application/json" `
+  -d "{\"basicInfoConfirmed\":true,\"followUpAcknowledged\":true}"
+```
+
+#### 3. 执行
+
+```powershell
+curl -X POST "http://localhost:8080/api/v1/equipment/MOT-2024-A07/workflow/execution" `
+  -H "Content-Type: application/json" `
+  -d "{\"basicInfoConfirmed\":true,\"followUpAcknowledged\":true,\"userIntent\":\"尽量不停机\"}"
+```
+
+#### 4. 反馈
+
+```powershell
+curl -X POST "http://localhost:8080/api/v1/equipment/MOT-2024-A07/workflow/feedback" `
+  -H "Content-Type: application/json" `
+  -d "{\"basicInfoConfirmed\":true,\"followUpAcknowledged\":true,\"selectedOptionCode\":\"A\"}"
 ```
 
 ## Skill 文件
 
-- [codex-skill/ops-maintenance-api/SKILL.md](/C:/Users/13352/Documents/Codex/2026-06-01/files-mentioned-by-the-user-md-3/codex-skill/ops-maintenance-api/SKILL.md)
-- [codex-skill/ops-maintenance-api/openapi.yaml](/C:/Users/13352/Documents/Codex/2026-06-01/files-mentioned-by-the-user-md-3/codex-skill/ops-maintenance-api/openapi.yaml)
-- [codex-skill/ops-maintenance-api/system-prompt.md](/C:/Users/13352/Documents/Codex/2026-06-01/files-mentioned-by-the-user-md-3/codex-skill/ops-maintenance-api/system-prompt.md)
+- [SKILL.md](/E:/Users/13352/Desktop/运维系统/files-mentioned-by-the-user-md-3/codex-skill/ops-maintenance-api/SKILL.md)
+- [openapi.yaml](/E:/Users/13352/Desktop/运维系统/files-mentioned-by-the-user-md-3/codex-skill/ops-maintenance-api/openapi.yaml)
+- [system-prompt.md](/E:/Users/13352/Desktop/运维系统/files-mentioned-by-the-user-md-3/codex-skill/ops-maintenance-api/system-prompt.md)

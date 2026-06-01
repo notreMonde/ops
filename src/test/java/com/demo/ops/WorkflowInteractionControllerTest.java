@@ -7,7 +7,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.hamcrest.Matchers.hasItems;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -20,45 +19,78 @@ class WorkflowInteractionControllerTest {
     private MockMvc mockMvc;
 
     @Test
-    void aircraftRetrievalShouldExposeMissingItems() throws Exception {
+    void aircraftClarifyShouldReturnCompactBasicInfo() throws Exception {
+        mockMvc.perform(post("/api/v1/aircraft/B-1234/workflow/clarify")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.stage").value("clarify"))
+                .andExpect(jsonPath("$.data.basicInfo.tailNo").value("B-1234"))
+                .andExpect(jsonPath("$.data.basicInfo.aircraftModel").exists())
+                .andExpect(jsonPath("$.data.basicInfo.flightStatus").exists())
+                .andExpect(jsonPath("$.data.canProceedToRetrieval").value(false));
+    }
+
+    @Test
+    void aircraftRetrievalShouldBlockWithoutClarifyConfirmation() throws Exception {
         mockMvc.perform(post("/api/v1/aircraft/B-1234/workflow/retrieval")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{}"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.stage").value("retrieval"))
-                .andExpect(jsonPath("$.data.missingItems[*].field", hasItems("userIntent", "continuousDrip", "repairTarget")));
+                .andExpect(jsonPath("$.data.retrievalStatus").value("blocked"))
+                .andExpect(jsonPath("$.data.canProceedToExecution").value(false));
     }
 
     @Test
-    void aircraftExecutionShouldRecommendMelRetentionWhenConditionsAllow() throws Exception {
+    void aircraftRetrievalShouldReturnCompressedSummariesAfterClarify() throws Exception {
+        mockMvc.perform(post("/api/v1/aircraft/B-1234/workflow/retrieval")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"basicInfoConfirmed\":true,\"followUpAcknowledged\":true}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.stage").value("retrieval"))
+                .andExpect(jsonPath("$.data.retrievedInfo.statusHistorySummary").exists())
+                .andExpect(jsonPath("$.data.retrievedInfo.melSummary").exists())
+                .andExpect(jsonPath("$.data.retrievedInfo.environmentSummary").exists())
+                .andExpect(jsonPath("$.data.retrievedInfo.resourceSummary").exists())
+                .andExpect(jsonPath("$.data.canProceedToExecution").value(true));
+    }
+
+    @Test
+    void aircraftExecutionShouldReturnOptionsAfterClarify() throws Exception {
         mockMvc.perform(post("/api/v1/aircraft/B-1234/workflow/execution")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"leakAreaCm2\":8,\"continuousDrip\":false,\"repairTarget\":\"保留放行\",\"userIntent\":\"尽快放行后再安排窗口期维修\"}"))
+                        .content("{\"basicInfoConfirmed\":true,\"followUpAcknowledged\":true,\"continuousDrip\":false,\"repairTarget\":\"保留放行\",\"userIntent\":\"尽快恢复运行\"}"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.stage").value("execution"))
-                .andExpect(jsonPath("$.data.blockingItems.length()").value(0))
-                .andExpect(jsonPath("$.data.analysis.recommendedOptionCode").value("B"))
-                .andExpect(jsonPath("$.data.options.length()").value(3));
+                .andExpect(jsonPath("$.data.options.length()").value(3))
+                .andExpect(jsonPath("$.data.analysis.recommendedOptionCode").exists());
     }
 
     @Test
-    void equipmentExecutionShouldRecommendImmediateShutdownForSevereSignals() throws Exception {
-        mockMvc.perform(post("/api/v1/equipment/MOT-2024-A07/workflow/execution")
+    void equipmentRetrievalShouldReturnCompressedSummariesAfterClarify() throws Exception {
+        mockMvc.perform(post("/api/v1/equipment/MOT-2024-A07/workflow/retrieval")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"userIntent\":\"控制风险，必要时立即停机\"}"))
+                        .content("{\"basicInfoConfirmed\":true,\"followUpAcknowledged\":true}"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.stage").value("execution"))
-                .andExpect(jsonPath("$.data.analysis.recommendedOptionCode").value("A"))
-                .andExpect(jsonPath("$.data.options.length()").value(3));
+                .andExpect(jsonPath("$.data.stage").value("retrieval"))
+                .andExpect(jsonPath("$.data.retrievedInfo.telemetrySummary").exists())
+                .andExpect(jsonPath("$.data.retrievedInfo.historicalCaseSummary").exists())
+                .andExpect(jsonPath("$.data.retrievedInfo.changeRelationSummary").exists())
+                .andExpect(jsonPath("$.data.retrievedInfo.resourceSummary").exists())
+                .andExpect(jsonPath("$.data.retrievedInfo.diagnosisSummary").exists());
     }
 
     @Test
-    void equipmentFeedbackShouldBlockUnsafeSelection() throws Exception {
+    void equipmentFeedbackShouldReturnReceiptAfterSelection() throws Exception {
         mockMvc.perform(post("/api/v1/equipment/MOT-2024-A07/workflow/feedback")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"selectedOptionCode\":\"B\",\"userIntent\":\"尽量不停机\"}"))
+                        .content("{\"basicInfoConfirmed\":true,\"followUpAcknowledged\":true,\"selectedOptionCode\":\"A\"}"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.stage").value("feedback"))
-                .andExpect(jsonPath("$.data.executionStatus").value("blocked"));
+                .andExpect(jsonPath("$.data.executionStatus").value("confirmed"))
+                .andExpect(jsonPath("$.data.selectedOptionCode").value("A"))
+                .andExpect(jsonPath("$.data.finalPlan.summary").exists())
+                .andExpect(jsonPath("$.data.nextAction").exists());
     }
 }

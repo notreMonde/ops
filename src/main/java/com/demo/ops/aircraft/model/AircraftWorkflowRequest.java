@@ -1,22 +1,17 @@
 package com.demo.ops.aircraft.model;
 
 /**
- * 飞机维修三阶段互动流程请求模型。
- * 用于承载检索、执行、反馈三个阶段共用的上下文字段。
+ * 飞机四阶段 workflow 通用请求。
  */
 public class AircraftWorkflowRequest {
 
-    /** 故障部件 */
     private String component;
-    /** 渗漏面积（cm²） */
     private Double leakAreaCm2;
-    /** 是否持续滴落 */
     private Boolean continuousDrip;
-    /** 维修目标 */
     private String repairTarget;
-    /** 用户意图 */
     private String userIntent;
-    /** 用户在执行阶段选择的方案编码 */
+    private Boolean basicInfoConfirmed;
+    private Boolean followUpAcknowledged;
     private String selectedOptionCode;
 
     public String getComponent() {
@@ -57,6 +52,22 @@ public class AircraftWorkflowRequest {
 
     public void setUserIntent(String userIntent) {
         this.userIntent = userIntent;
+    }
+
+    public Boolean getBasicInfoConfirmed() {
+        return basicInfoConfirmed;
+    }
+
+    public void setBasicInfoConfirmed(Boolean basicInfoConfirmed) {
+        this.basicInfoConfirmed = basicInfoConfirmed;
+    }
+
+    public Boolean getFollowUpAcknowledged() {
+        return followUpAcknowledged;
+    }
+
+    public void setFollowUpAcknowledged(Boolean followUpAcknowledged) {
+        this.followUpAcknowledged = followUpAcknowledged;
     }
 
     public String getSelectedOptionCode() {

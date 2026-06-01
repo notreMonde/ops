@@ -1,26 +1,19 @@
 package com.demo.ops.equipment.model;
 
 /**
- * 设备维修三阶段互动流程请求模型。
- * 用于承载检索、执行、反馈三个阶段共用的上下文字段。
+ * 设备四阶段 workflow 通用请求。
  */
 public class EquipmentWorkflowRequest {
 
-    /** 当前温度 */
     private Double currentTemperatureC;
-    /** 振动值 */
     private Double vibrationMmPerS;
-    /** 温升速率 */
     private Double temperatureRiseRatePerMin;
-    /** 是否立即停机 */
     private Boolean immediateShutdown;
-    /** 是否预留轴承 */
     private Boolean reserveBearing;
-    /** 是否推送工单 */
     private Boolean pushWorkOrder;
-    /** 用户意图 */
     private String userIntent;
-    /** 用户在执行阶段选择的方案编码 */
+    private Boolean basicInfoConfirmed;
+    private Boolean followUpAcknowledged;
     private String selectedOptionCode;
 
     public Double getCurrentTemperatureC() {
@@ -77,6 +70,22 @@ public class EquipmentWorkflowRequest {
 
     public void setUserIntent(String userIntent) {
         this.userIntent = userIntent;
+    }
+
+    public Boolean getBasicInfoConfirmed() {
+        return basicInfoConfirmed;
+    }
+
+    public void setBasicInfoConfirmed(Boolean basicInfoConfirmed) {
+        this.basicInfoConfirmed = basicInfoConfirmed;
+    }
+
+    public Boolean getFollowUpAcknowledged() {
+        return followUpAcknowledged;
+    }
+
+    public void setFollowUpAcknowledged(Boolean followUpAcknowledged) {
+        this.followUpAcknowledged = followUpAcknowledged;
     }
 
     public String getSelectedOptionCode() {
