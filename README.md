@@ -14,7 +14,7 @@
 ### 四阶段说明
 
 - 澄清：只展示基础信息，并明确告知“接下来会深挖历史/变更/资源事实后再生成方案”，等待用户确认。
-- 检索：自动深挖必要事实，不再向用户发起二次确认；返回压缩版关键字段，直接展示。
+- 检索：自动深挖必要事实，不再向用户发起二次确认；返回“摘要 + 完整详情”，并直接展示。
 - 执行：展示检索到的关键信息，并给出 `2-3` 个方案供用户选择。
 - 反馈：根据用户选定的方案，返回最终执行回执。
 
@@ -101,6 +101,11 @@ curl -X POST "http://localhost:8080/api/v1/aircraft/B-1234/workflow/retrieval" `
   -d "{\"basicInfoConfirmed\":true,\"followUpAcknowledged\":true,\"continuousDrip\":false}"
 ```
 
+检索阶段当前会同时返回：
+
+- `retrievedInfo`：压缩版摘要，便于快速浏览
+- `retrievedDetails`：完整详情，直接展开 `statusHistory`、`melAssessment`、`environment`、`troubleshootingKnowledge`、`knowledgeGraph`、`personnelMatch`、`inventory`、`diagnosisConclusion`
+
 #### 3. 执行
 
 ```powershell
@@ -142,6 +147,11 @@ curl -X POST "http://localhost:8080/api/v1/equipment/MOT-2024-A07/workflow/retri
   -H "Content-Type: application/json" `
   -d "{\"basicInfoConfirmed\":true,\"followUpAcknowledged\":true}"
 ```
+
+检索阶段当前会同时返回：
+
+- `retrievedInfo`：压缩版摘要，便于快速浏览
+- `retrievedDetails`：完整详情，直接展开 `digitalTwin`、`telemetry`、`historicalCases`、`changeRelations`、`personnelMatch`、`inventory`、`diagnosisConclusion`
 
 #### 3. 执行
 

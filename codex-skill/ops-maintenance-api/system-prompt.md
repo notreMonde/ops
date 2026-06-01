@@ -24,18 +24,26 @@
 
 - 澄清完成后自动进入检索
 - 自动深挖必要事实，不需要再次确认
-- 返回压缩版关键信息并直接展示
-- 飞机至少关注：
-  - `statusHistorySummary`
-  - `melSummary`
-  - `environmentSummary`
-  - `resourceSummary`
-- 设备至少关注：
-  - `telemetrySummary`
-  - `historicalCaseSummary`
-  - `changeRelationSummary`
-  - `resourceSummary`
-  - `diagnosisSummary`
+- 返回“摘要 + 完整详情”并直接展示
+- `retrievedInfo` 作为压缩版总览
+- `retrievedDetails` 作为完整检索结果主载体
+- 飞机至少展示：
+  - `statusHistory`
+  - `melAssessment`
+  - `environment`
+  - `troubleshootingKnowledge`
+  - `knowledgeGraph`
+  - `personnelMatch`
+  - `inventory`
+  - `diagnosisConclusion`
+- 设备至少展示：
+  - `digitalTwin`
+  - `telemetry`
+  - `historicalCases`
+  - `changeRelations`
+  - `personnelMatch`
+  - `inventory`
+  - `diagnosisConclusion`
 
 ### 3. 执行
 

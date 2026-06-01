@@ -160,6 +160,7 @@ paths:
   /api/v1/aircraft/{tailNo}/workflow/retrieval:
     post:
       summary: 飞机 workflow 的检索阶段
+      description: 返回检索摘要 `retrievedInfo` 与完整详情 `retrievedDetails`，完整详情直接展示不收起。
       parameters:
         - $ref: '#/components/parameters/TailNo'
       requestBody:
@@ -170,11 +171,20 @@ paths:
               $ref: '#/components/schemas/AircraftWorkflowRequest'
       responses:
         '200':
-          description: 飞机检索阶段结果
+          description: 飞机检索阶段结果，包含摘要与完整详情
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
+      x-retrieval-details:
+        - statusHistory
+        - melAssessment
+        - environment
+        - troubleshootingKnowledge
+        - knowledgeGraph
+        - personnelMatch
+        - inventory
+        - diagnosisConclusion
   /api/v1/aircraft/{tailNo}/workflow/execution:
     post:
       summary: 飞机 workflow 的执行阶段
@@ -340,6 +350,7 @@ paths:
   /api/v1/equipment/{equipmentId}/workflow/retrieval:
     post:
       summary: 设备 workflow 的检索阶段
+      description: 返回检索摘要 `retrievedInfo` 与完整详情 `retrievedDetails`，完整详情直接展示不收起。
       parameters:
         - $ref: '#/components/parameters/EquipmentId'
       requestBody:
@@ -350,11 +361,19 @@ paths:
               $ref: '#/components/schemas/EquipmentWorkflowRequest'
       responses:
         '200':
-          description: 设备检索阶段结果
+          description: 设备检索阶段结果，包含摘要与完整详情
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
+      x-retrieval-details:
+        - digitalTwin
+        - telemetry
+        - historicalCases
+        - changeRelations
+        - personnelMatch
+        - inventory
+        - diagnosisConclusion
   /api/v1/equipment/{equipmentId}/workflow/execution:
     post:
       summary: 设备 workflow 的执行阶段

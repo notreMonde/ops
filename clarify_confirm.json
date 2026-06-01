@@ -1,0 +1,8 @@
+{
+  "component": "左主起落架减震支柱",
+  "leakAreaCm2": 15.0,
+  "continuousDrip": false,
+  "userIntent": "查MEL能否保留,如果不能保留给出维修方案",
+  "basicInfoConfirmed": true,
+  "followUpAcknowledged": true
+}

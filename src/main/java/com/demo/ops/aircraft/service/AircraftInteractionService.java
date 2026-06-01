@@ -215,18 +215,31 @@ public class AircraftInteractionService {
     private ObjectNode buildRetrievalResult(String tailNo, AircraftWorkflowRequest request) {
         ObjectNode statusHistory = (ObjectNode) aircraftDecisionService.getStatusHistory(tailNo);
         ObjectNode environment = (ObjectNode) aircraftDecisionService.getEnvironment(tailNo);
+        ObjectNode troubleshootingKnowledge = (ObjectNode) aircraftDecisionService.getTroubleshootingKnowledge(tailNo);
+        ObjectNode knowledgeGraph = (ObjectNode) aircraftDecisionService.getKnowledgeGraph(tailNo);
         ObjectNode personnel = (ObjectNode) aircraftDecisionService.getPersonnelMatch(tailNo);
         ObjectNode inventory = (ObjectNode) aircraftDecisionService.getInventory(tailNo);
         ObjectNode diagnosis = buildDiagnosis(tailNo, request, statusHistory);
+        ObjectNode melAssessment = buildMelAssessmentDetail(tailNo, request, statusHistory);
 
         ObjectNode result = baseStage("retrieval");
         result.put("retrievalStatus", "completed");
 
         ObjectNode retrievedInfo = result.putObject("retrievedInfo");
         retrievedInfo.set("statusHistorySummary", buildStatusHistorySummary(statusHistory));
-        retrievedInfo.set("melSummary", buildMelSummary(tailNo, request, statusHistory));
+        retrievedInfo.set("melSummary", buildMelSummary(melAssessment));
         retrievedInfo.set("environmentSummary", buildEnvironmentSummary(environment));
         retrievedInfo.set("resourceSummary", buildAircraftResourceSummary(personnel, inventory));
+
+        ObjectNode retrievedDetails = result.putObject("retrievedDetails");
+        retrievedDetails.set("statusHistory", statusHistory);
+        retrievedDetails.set("melAssessment", melAssessment);
+        retrievedDetails.set("environment", environment);
+        retrievedDetails.set("troubleshootingKnowledge", troubleshootingKnowledge);
+        retrievedDetails.set("knowledgeGraph", knowledgeGraph);
+        retrievedDetails.set("personnelMatch", personnel);
+        retrievedDetails.set("inventory", inventory);
+        retrievedDetails.set("diagnosisConclusion", diagnosis);
 
         ArrayNode knownConstraints = result.putArray("knownConstraints");
         appendAircraftConstraints(knownConstraints, environment, request);
@@ -234,13 +247,11 @@ public class AircraftInteractionService {
         ObjectNode retrievalSummary = result.putObject("retrievalSummary");
         retrievalSummary.put("severity", diagnosis.path("severity").asText(""));
         retrievalSummary.put("coreFinding", diagnosis.path("summary").asText(""));
-        retrievalSummary.put("executionReadiness", request.getContinuousDrip() == null
-                ? "已完成历史、环境和资源事实深挖；如需确认 MEL 保留放行，仍需补充持续滴落状态。"
-                : "已完成关键事实深挖，可直接进入执行阶段比较方案。");
+        retrievalSummary.put("executionReadiness", "已展示完整检索结果，可继续进入执行阶段。");
         retrievalSummary.put("detailAvailable", true);
 
         result.put("canProceedToExecution", true);
-        result.put("nextStep", "检索已完成，执行阶段会展示这些压缩后的关键信息并生成方案。");
+        result.put("nextStep", "检索已完成，当前已同时展示摘要和完整详情，可进入执行阶段。");
         return result;
     }
 
@@ -256,33 +267,50 @@ public class AircraftInteractionService {
         return summary;
     }
 
-    private ObjectNode buildMelSummary(String tailNo, AircraftWorkflowRequest request, ObjectNode statusHistory) {
+    private ObjectNode buildMelSummary(ObjectNode melAssessment) {
         ObjectNode summary = objectMapper.createObjectNode();
-        double leakArea = resolveLeakArea(request, statusHistory);
-        summary.put("component", resolveComponent(request.getComponent()));
-        summary.put("observedLeakAreaCm2", leakArea);
-        summary.put("thresholdCm2", 10.0D);
-
-        if (request.getContinuousDrip() == null) {
-            summary.put("continuousDripKnown", false);
+        summary.put("component", melAssessment.path("component").asText(""));
+        summary.put("observedLeakAreaCm2", melAssessment.path("observedLeakAreaCm2").asDouble(0.0D));
+        summary.put("thresholdCm2", melAssessment.path("thresholdCm2").asDouble(0.0D));
+        summary.put("continuousDripKnown", melAssessment.path("continuousDripKnown").asBoolean(false));
+        if (melAssessment.path("continuousDrip").isNull()) {
             summary.putNull("continuousDrip");
-            summary.put("releasable", false);
-            summary.put("decision", "待补充持续滴落状态后确认");
-            summary.put("reason", "当前已拿到渗漏面积，但持续滴落状态仍未确认。");
-            return summary;
+        } else {
+            summary.put("continuousDrip", melAssessment.path("continuousDrip").asBoolean(false));
         }
+        summary.put("releasable", melAssessment.path("releasable").asBoolean(false));
+        summary.put("decision", melAssessment.path("decision").asText(""));
+        summary.put("reason", melAssessment.path("reason").asText(""));
+        return summary;
+    }
 
-        JsonNode melRelease = aircraftDecisionService.getMelRelease(
+    private ObjectNode buildMelAssessmentDetail(String tailNo, AircraftWorkflowRequest request, ObjectNode statusHistory) {
+        double leakArea = resolveLeakArea(request, statusHistory);
+        if (request.getContinuousDrip() == null) {
+            ObjectNode node = objectMapper.createObjectNode();
+            node.put("tailNo", tailNo);
+            node.put("component", resolveComponent(request.getComponent()));
+            node.put("melItem", "32-10-02-01");
+            node.put("melTitle", "主起落架减震支柱内筒渗漏");
+            node.put("thresholdCm2", 10.0D);
+            node.put("observedLeakAreaCm2", leakArea);
+            node.put("continuousDripKnown", false);
+            node.putNull("continuousDrip");
+            node.put("releasable", false);
+            node.put("releaseProhibited", true);
+            node.put("repairDueDays", 0);
+            node.put("decision", "待补充持续滴落状态后确认");
+            node.put("reason", "当前已拿到渗漏面积，但持续滴落状态仍未确认。");
+            node.put("followUpAction", "先补充持续滴落状态，再确认是否可按 MEL 保留放行。");
+            return node;
+        }
+        ObjectNode melRelease = (ObjectNode) aircraftDecisionService.getMelRelease(
                 tailNo,
                 resolveComponent(request.getComponent()),
                 leakArea,
                 request.getContinuousDrip());
-        summary.put("continuousDripKnown", true);
-        summary.put("continuousDrip", request.getContinuousDrip());
-        summary.put("releasable", melRelease.path("releasable").asBoolean(false));
-        summary.put("decision", melRelease.path("decision").asText(""));
-        summary.put("reason", melRelease.path("reason").asText(""));
-        return summary;
+        melRelease.put("continuousDripKnown", true);
+        return melRelease;
     }
 
     private ObjectNode buildEnvironmentSummary(ObjectNode environment) {

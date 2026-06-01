@@ -218,17 +218,26 @@ public class EquipmentInteractionService {
         retrievedInfo.set("resourceSummary", buildEquipmentResourceSummary(personnel, inventory));
         retrievedInfo.set("diagnosisSummary", buildDiagnosisSummary(diagnosis, digitalTwin));
 
+        ObjectNode retrievedDetails = result.putObject("retrievedDetails");
+        retrievedDetails.set("digitalTwin", digitalTwin);
+        retrievedDetails.set("telemetry", telemetry);
+        retrievedDetails.set("historicalCases", historicalCases);
+        retrievedDetails.set("changeRelations", changeRelations);
+        retrievedDetails.set("personnelMatch", personnel);
+        retrievedDetails.set("inventory", inventory);
+        retrievedDetails.set("diagnosisConclusion", diagnosis);
+
         ArrayNode knownConstraints = result.putArray("knownConstraints");
         appendEquipmentConstraints(knownConstraints, digitalTwin, diagnosis);
 
         ObjectNode retrievalSummary = result.putObject("retrievalSummary");
         retrievalSummary.put("severity", diagnosis.path("severity").asText(""));
         retrievalSummary.put("coreFinding", diagnosis.path("summary").asText(""));
-        retrievalSummary.put("executionReadiness", "已完成历史、变更、资源和诊断事实深挖，可直接进入执行阶段比较方案。");
+        retrievalSummary.put("executionReadiness", "已展示完整检索结果，可继续进入执行阶段。");
         retrievalSummary.put("detailAvailable", true);
 
         result.put("canProceedToExecution", true);
-        result.put("nextStep", "检索已完成，执行阶段会基于这些压缩字段给出 2-3 个方案。");
+        result.put("nextStep", "检索已完成，当前已同时展示摘要和完整详情，可进入执行阶段。");
         return result;
     }
 
