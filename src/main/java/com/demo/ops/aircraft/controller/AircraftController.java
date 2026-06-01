@@ -2,7 +2,9 @@ package com.demo.ops.aircraft.controller;
 
 import com.demo.ops.aircraft.model.AircraftDiagnosisRequest;
 import com.demo.ops.aircraft.model.AircraftDispositionRequest;
+import com.demo.ops.aircraft.model.AircraftWorkflowRequest;
 import com.demo.ops.aircraft.service.AircraftDecisionService;
+import com.demo.ops.aircraft.service.AircraftInteractionService;
 import com.demo.ops.common.model.ApiResponse;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,9 +24,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class AircraftController {
 
     private final AircraftDecisionService aircraftDecisionService;
+    private final AircraftInteractionService aircraftInteractionService;
 
-    public AircraftController(AircraftDecisionService aircraftDecisionService) {
+    public AircraftController(AircraftDecisionService aircraftDecisionService,
+                              AircraftInteractionService aircraftInteractionService) {
         this.aircraftDecisionService = aircraftDecisionService;
+        this.aircraftInteractionService = aircraftInteractionService;
     }
 
     /** 查询飞机历史状态 */
@@ -84,5 +89,26 @@ public class AircraftController {
     public ApiResponse<JsonNode> getDispositionDecision(@PathVariable String tailNo,
                                                         @RequestBody(required = false) AircraftDispositionRequest request) {
         return ApiResponse.success(aircraftDecisionService.getDispositionDecision(tailNo, request));
+    }
+
+    /** 三阶段互动流程：检索阶段 */
+    @PostMapping("/{tailNo}/workflow/retrieval")
+    public ApiResponse<JsonNode> getWorkflowRetrieval(@PathVariable String tailNo,
+                                                      @RequestBody(required = false) AircraftWorkflowRequest request) {
+        return ApiResponse.success(aircraftInteractionService.getRetrieval(tailNo, request));
+    }
+
+    /** 三阶段互动流程：执行阶段 */
+    @PostMapping("/{tailNo}/workflow/execution")
+    public ApiResponse<JsonNode> getWorkflowExecution(@PathVariable String tailNo,
+                                                      @RequestBody(required = false) AircraftWorkflowRequest request) {
+        return ApiResponse.success(aircraftInteractionService.getExecution(tailNo, request));
+    }
+
+    /** 三阶段互动流程：反馈阶段 */
+    @PostMapping("/{tailNo}/workflow/feedback")
+    public ApiResponse<JsonNode> getWorkflowFeedback(@PathVariable String tailNo,
+                                                     @RequestBody(required = false) AircraftWorkflowRequest request) {
+        return ApiResponse.success(aircraftInteractionService.getFeedback(tailNo, request));
     }
 }

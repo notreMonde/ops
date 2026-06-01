@@ -1,11 +1,15 @@
 com\demo\ops\common\exception\DemoNotFoundException.class
 com\demo\ops\equipment\model\EquipmentDiagnosisRequest.class
+com\demo\ops\aircraft\model\AircraftWorkflowRequest.class
 com\demo\ops\equipment\service\EquipmentDecisionService.class
 com\demo\ops\equipment\model\EquipmentDispositionRequest.class
+com\demo\ops\equipment\model\EquipmentWorkflowRequest.class
 com\demo\ops\config\OpenApiConfig.class
+com\demo\ops\aircraft\service\AircraftInteractionService.class
 com\demo\ops\aircraft\service\AircraftDecisionService.class
 com\demo\ops\common\exception\GlobalExceptionHandler.class
 com\demo\ops\aircraft\controller\AircraftController.class
+com\demo\ops\equipment\service\EquipmentInteractionService.class
 com\demo\ops\common\service\JsonResourceService.class
 com\demo\ops\aircraft\model\AircraftDiagnosisRequest.class
 com\demo\ops\equipment\controller\EquipmentController.class

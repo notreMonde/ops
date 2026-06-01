@@ -3,7 +3,9 @@ package com.demo.ops.equipment.controller;
 import com.demo.ops.common.model.ApiResponse;
 import com.demo.ops.equipment.model.EquipmentDiagnosisRequest;
 import com.demo.ops.equipment.model.EquipmentDispositionRequest;
+import com.demo.ops.equipment.model.EquipmentWorkflowRequest;
 import com.demo.ops.equipment.service.EquipmentDecisionService;
+import com.demo.ops.equipment.service.EquipmentInteractionService;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,9 +23,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class EquipmentController {
 
     private final EquipmentDecisionService equipmentDecisionService;
+    private final EquipmentInteractionService equipmentInteractionService;
 
-    public EquipmentController(EquipmentDecisionService equipmentDecisionService) {
+    public EquipmentController(EquipmentDecisionService equipmentDecisionService,
+                               EquipmentInteractionService equipmentInteractionService) {
         this.equipmentDecisionService = equipmentDecisionService;
+        this.equipmentInteractionService = equipmentInteractionService;
     }
 
     /** 查询设备数字孪生数据 */
@@ -74,5 +79,26 @@ public class EquipmentController {
     public ApiResponse<JsonNode> getDispositionDecision(@PathVariable String equipmentId,
                                                         @RequestBody(required = false) EquipmentDispositionRequest request) {
         return ApiResponse.success(equipmentDecisionService.getDispositionDecision(equipmentId, request));
+    }
+
+    /** 三阶段互动流程：检索阶段 */
+    @PostMapping("/{equipmentId}/workflow/retrieval")
+    public ApiResponse<JsonNode> getWorkflowRetrieval(@PathVariable String equipmentId,
+                                                      @RequestBody(required = false) EquipmentWorkflowRequest request) {
+        return ApiResponse.success(equipmentInteractionService.getRetrieval(equipmentId, request));
+    }
+
+    /** 三阶段互动流程：执行阶段 */
+    @PostMapping("/{equipmentId}/workflow/execution")
+    public ApiResponse<JsonNode> getWorkflowExecution(@PathVariable String equipmentId,
+                                                      @RequestBody(required = false) EquipmentWorkflowRequest request) {
+        return ApiResponse.success(equipmentInteractionService.getExecution(equipmentId, request));
+    }
+
+    /** 三阶段互动流程：反馈阶段 */
+    @PostMapping("/{equipmentId}/workflow/feedback")
+    public ApiResponse<JsonNode> getWorkflowFeedback(@PathVariable String equipmentId,
+                                                     @RequestBody(required = false) EquipmentWorkflowRequest request) {
+        return ApiResponse.success(equipmentInteractionService.getFeedback(equipmentId, request));
     }
 }

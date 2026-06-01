@@ -1,6 +1,9 @@
+E:\Users\13352\Desktop\运维系统\files-mentioned-by-the-user-md-3\src\main\java\com\demo\ops\equipment\model\EquipmentWorkflowRequest.java
 E:\Users\13352\Desktop\运维系统\files-mentioned-by-the-user-md-3\src\main\java\com\demo\ops\aircraft\controller\AircraftController.java
 E:\Users\13352\Desktop\运维系统\files-mentioned-by-the-user-md-3\src\main\java\com\demo\ops\common\model\ApiResponse.java
+E:\Users\13352\Desktop\运维系统\files-mentioned-by-the-user-md-3\src\main\java\com\demo\ops\aircraft\service\AircraftInteractionService.java
 E:\Users\13352\Desktop\运维系统\files-mentioned-by-the-user-md-3\src\main\java\com\demo\ops\equipment\service\EquipmentDecisionService.java
+E:\Users\13352\Desktop\运维系统\files-mentioned-by-the-user-md-3\src\main\java\com\demo\ops\aircraft\model\AircraftWorkflowRequest.java
 E:\Users\13352\Desktop\运维系统\files-mentioned-by-the-user-md-3\src\main\java\com\demo\ops\common\exception\DemoNotFoundException.java
 E:\Users\13352\Desktop\运维系统\files-mentioned-by-the-user-md-3\src\main\java\com\demo\ops\common\service\JsonResourceService.java
 E:\Users\13352\Desktop\运维系统\files-mentioned-by-the-user-md-3\src\main\java\com\demo\ops\aircraft\service\AircraftDecisionService.java
@@ -10,5 +13,6 @@ E:\Users\13352\Desktop\运维系统\files-mentioned-by-the-user-md-3\src\main\ja
 E:\Users\13352\Desktop\运维系统\files-mentioned-by-the-user-md-3\src\main\java\com\demo\ops\aircraft\model\AircraftDiagnosisRequest.java
 E:\Users\13352\Desktop\运维系统\files-mentioned-by-the-user-md-3\src\main\java\com\demo\ops\MaintenanceDecisionApplication.java
 E:\Users\13352\Desktop\运维系统\files-mentioned-by-the-user-md-3\src\main\java\com\demo\ops\aircraft\model\AircraftDispositionRequest.java
+E:\Users\13352\Desktop\运维系统\files-mentioned-by-the-user-md-3\src\main\java\com\demo\ops\equipment\service\EquipmentInteractionService.java
 E:\Users\13352\Desktop\运维系统\files-mentioned-by-the-user-md-3\src\main\java\com\demo\ops\equipment\model\EquipmentDispositionRequest.java
 E:\Users\13352\Desktop\运维系统\files-mentioned-by-the-user-md-3\src\main\java\com\demo\ops\equipment\model\EquipmentDiagnosisRequest.java

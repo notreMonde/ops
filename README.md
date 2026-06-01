@@ -63,6 +63,22 @@ curl -X POST "http://localhost:8080/api/v1/aircraft/B-1234/diagnosis-conclusion"
 curl -X POST "http://localhost:8080/api/v1/aircraft/B-1234/disposition-decision" -H "Content-Type: application/json" -d "{\"leakAreaCm2\":15,\"continuousDrip\":false,\"repairTarget\":\"完全修复\"}"
 ```
 
+### 三阶段互动流程
+
+飞机和设备都新增了固定的三阶段 workflow 接口：
+
+1. 检索：先列出已确认信息、用户意图和待补充项
+2. 执行：给出 2-3 个可选方案并标出推荐项
+3. 反馈：基于用户选定方案给出最终执行方案
+
+#### 飞机 workflow
+
+```powershell
+curl -X POST "http://localhost:8080/api/v1/aircraft/B-1234/workflow/retrieval" -H "Content-Type: application/json" -d "{}"
+curl -X POST "http://localhost:8080/api/v1/aircraft/B-1234/workflow/execution" -H "Content-Type: application/json" -d "{\"leakAreaCm2\":8,\"continuousDrip\":false,\"repairTarget\":\"保留放行\",\"userIntent\":\"尽快放行后再安排窗口期维修\"}"
+curl -X POST "http://localhost:8080/api/v1/aircraft/B-1234/workflow/feedback" -H "Content-Type: application/json" -d "{\"leakAreaCm2\":8,\"continuousDrip\":false,\"repairTarget\":\"保留放行\",\"userIntent\":\"尽快放行后再安排窗口期维修\",\"selectedOptionCode\":\"B\"}"
+```
+
 ### 设备维修
 
 ```powershell
@@ -71,6 +87,9 @@ curl "http://localhost:8080/api/v1/equipment/MOT-2024-A07/telemetry"
 curl "http://localhost:8080/api/v1/equipment/MOT-2024-A07/historical-cases"
 curl -X POST "http://localhost:8080/api/v1/equipment/MOT-2024-A07/diagnosis-conclusion" -H "Content-Type: application/json" -d "{\"currentTemperatureC\":92,\"vibrationMmPerS\":4.2,\"temperatureRiseRatePerMin\":2.3}"
 curl -X POST "http://localhost:8080/api/v1/equipment/MOT-2024-A07/disposition-decision" -H "Content-Type: application/json" -d "{\"immediateShutdown\":true,\"reserveBearing\":true,\"pushWorkOrder\":true}"
+curl -X POST "http://localhost:8080/api/v1/equipment/MOT-2024-A07/workflow/retrieval" -H "Content-Type: application/json" -d "{}"
+curl -X POST "http://localhost:8080/api/v1/equipment/MOT-2024-A07/workflow/execution" -H "Content-Type: application/json" -d "{\"userIntent\":\"控制风险，必要时立即停机\"}"
+curl -X POST "http://localhost:8080/api/v1/equipment/MOT-2024-A07/workflow/feedback" -H "Content-Type: application/json" -d "{\"userIntent\":\"控制风险，必要时立即停机\",\"selectedOptionCode\":\"A\"}"
 ```
 
 ## Skill 文件
