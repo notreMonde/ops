@@ -1,0 +1,33 @@
+{
+  "aircraftModel": "B737-800",
+  "tailNo": "B-1234",
+  "base": "北京大兴国际机场",
+  "flightStatus": "航后",
+  "component": {
+    "name": "左主起落架减震支柱",
+    "partNumber": "161A1102-1",
+    "serialTracking": {
+      "tsnHours": 18500,
+      "csnCycles": 8200
+    }
+  },
+  "maintenanceHistory": {
+    "lastSealReplacementDate": "2024-09-15",
+    "monthsSinceLastReplacement": 3,
+    "lastHeavyCheck": "2024-06-18"
+  },
+  "historicalFindings": [
+    {
+      "date": "2024-12-01",
+      "finding": "曾报告轻微渗油，清洁后持续监控",
+      "action": "清洁、复查、继续放行监控",
+      "severity": "低"
+    }
+  ],
+  "currentFaultSnapshot": {
+    "faultLocation": "左主起落架减震支柱内筒镜面",
+    "faultType": "液压油渗漏",
+    "measuredLeakAreaCm2": 15,
+    "manualThresholdCm2": 10
+  }
+}

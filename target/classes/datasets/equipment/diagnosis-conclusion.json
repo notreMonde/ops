@@ -1,0 +1,19 @@
+{
+  "summary": "油气润滑系统喷嘴堵塞导致驱动端轴承润滑不良，引发异常温升。",
+  "rootCause": "润滑系统管路保养后引入微小杂质，造成喷嘴堵塞",
+  "confidence": "高",
+  "severity": "P0",
+  "evidence": [
+    "温度 92°C，远高于正常阈值 65°C",
+    "温升速率 2.3°C/min 且异常集中在驱动端轴承",
+    "振动 4.2 mm/s，高频分量增加，符合润滑不良特征",
+    "历史案例相似度 89%",
+    "72 小时前存在润滑系统管路保养变更",
+    "电流平稳，排除主电机过载"
+  ],
+  "telemetrySnapshot": {
+    "currentTemperatureC": 92,
+    "vibrationMmPerS": 4.2,
+    "temperatureRiseRatePerMin": 2.3
+  }
+}

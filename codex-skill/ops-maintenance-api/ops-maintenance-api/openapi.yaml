@@ -1,0 +1,319 @@
+openapi: 3.0.3
+info:
+  title: Maintenance Decision Service API
+  version: v1
+  description: API for aircraft maintenance and equipment maintenance workflows.
+servers:
+  - url: http://localhost:8080
+paths:
+  /api/v1/aircraft/{tailNo}/status-history:
+    get:
+      summary: Query aircraft status and maintenance history
+      parameters:
+        - $ref: '#/components/parameters/TailNo'
+      responses:
+        '200':
+          description: Aircraft status and maintenance history
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /api/v1/aircraft/{tailNo}/mel-release:
+    get:
+      summary: Query MEL release decision for aircraft leakage scenario
+      parameters:
+        - $ref: '#/components/parameters/TailNo'
+        - in: query
+          name: component
+          schema:
+            type: string
+        - in: query
+          name: leakAreaCm2
+          schema:
+            type: number
+            format: double
+        - in: query
+          name: continuousDrip
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: MEL decision result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /api/v1/aircraft/{tailNo}/environment:
+    get:
+      summary: Query current stand, hangar, and temperature context
+      parameters:
+        - $ref: '#/components/parameters/TailNo'
+      responses:
+        '200':
+          description: Environment awareness data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /api/v1/aircraft/{tailNo}/troubleshooting-kb:
+    get:
+      summary: Retrieve AMM troubleshooting steps and required tools
+      parameters:
+        - $ref: '#/components/parameters/TailNo'
+      responses:
+        '200':
+          description: Troubleshooting knowledge
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /api/v1/aircraft/{tailNo}/knowledge-graph:
+    get:
+      summary: Query maintenance knowledge graph inference for leakage fault
+      parameters:
+        - $ref: '#/components/parameters/TailNo'
+      responses:
+        '200':
+          description: Knowledge graph inference
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /api/v1/aircraft/{tailNo}/personnel-match:
+    get:
+      summary: Match qualified aircraft maintenance personnel
+      parameters:
+        - $ref: '#/components/parameters/TailNo'
+      responses:
+        '200':
+          description: Personnel profile result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /api/v1/aircraft/{tailNo}/inventory:
+    get:
+      summary: Query aircraft material and tool inventory
+      parameters:
+        - $ref: '#/components/parameters/TailNo'
+      responses:
+        '200':
+          description: Inventory result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /api/v1/aircraft/{tailNo}/diagnosis-conclusion:
+    post:
+      summary: Generate aircraft maintenance diagnosis conclusion
+      parameters:
+        - $ref: '#/components/parameters/TailNo'
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AircraftDiagnosisRequest'
+      responses:
+        '200':
+          description: Diagnosis conclusion
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /api/v1/aircraft/{tailNo}/disposition-decision:
+    post:
+      summary: Generate integrated aircraft disposition plan
+      parameters:
+        - $ref: '#/components/parameters/TailNo'
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AircraftDispositionRequest'
+      responses:
+        '200':
+          description: Aircraft disposition decision
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /api/v1/equipment/{equipmentId}/digital-twin:
+    get:
+      summary: Query equipment digital twin metadata
+      parameters:
+        - $ref: '#/components/parameters/EquipmentId'
+      responses:
+        '200':
+          description: Digital twin data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /api/v1/equipment/{equipmentId}/telemetry:
+    get:
+      summary: Query equipment real-time telemetry
+      parameters:
+        - $ref: '#/components/parameters/EquipmentId'
+      responses:
+        '200':
+          description: Telemetry data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /api/v1/equipment/{equipmentId}/historical-cases:
+    get:
+      summary: Retrieve similar equipment fault cases and maintenance history
+      parameters:
+        - $ref: '#/components/parameters/EquipmentId'
+      responses:
+        '200':
+          description: Historical cases
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /api/v1/equipment/{equipmentId}/change-relations:
+    get:
+      summary: Query recent changes related to current equipment fault
+      parameters:
+        - $ref: '#/components/parameters/EquipmentId'
+      responses:
+        '200':
+          description: Change relation result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /api/v1/equipment/{equipmentId}/personnel-match:
+    get:
+      summary: Match qualified equipment maintenance personnel
+      parameters:
+        - $ref: '#/components/parameters/EquipmentId'
+      responses:
+        '200':
+          description: Personnel match result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /api/v1/equipment/{equipmentId}/inventory:
+    get:
+      summary: Query spare parts and tools for equipment repair
+      parameters:
+        - $ref: '#/components/parameters/EquipmentId'
+      responses:
+        '200':
+          description: Equipment inventory result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /api/v1/equipment/{equipmentId}/diagnosis-conclusion:
+    post:
+      summary: Generate equipment diagnosis conclusion
+      parameters:
+        - $ref: '#/components/parameters/EquipmentId'
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EquipmentDiagnosisRequest'
+      responses:
+        '200':
+          description: Equipment diagnosis result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /api/v1/equipment/{equipmentId}/disposition-decision:
+    post:
+      summary: Generate equipment disposition decision
+      parameters:
+        - $ref: '#/components/parameters/EquipmentId'
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EquipmentDispositionRequest'
+      responses:
+        '200':
+          description: Equipment disposition result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+components:
+  parameters:
+    TailNo:
+      in: path
+      name: tailNo
+      required: true
+      schema:
+        type: string
+      example: B-1234
+    EquipmentId:
+      in: path
+      name: equipmentId
+      required: true
+      schema:
+        type: string
+      example: MOT-2024-A07
+  schemas:
+    ApiResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+        timestamp:
+          type: string
+        data:
+          type: object
+          additionalProperties: true
+    AircraftDiagnosisRequest:
+      type: object
+      properties:
+        leakAreaCm2:
+          type: number
+          format: double
+        continuousDrip:
+          type: boolean
+        repairTarget:
+          type: string
+    AircraftDispositionRequest:
+      type: object
+      properties:
+        leakAreaCm2:
+          type: number
+          format: double
+        continuousDrip:
+          type: boolean
+        repairTarget:
+          type: string
+    EquipmentDiagnosisRequest:
+      type: object
+      properties:
+        currentTemperatureC:
+          type: number
+          format: double
+        vibrationMmPerS:
+          type: number
+          format: double
+        temperatureRiseRatePerMin:
+          type: number
+          format: double
+    EquipmentDispositionRequest:
+      type: object
+      properties:
+        immediateShutdown:
+          type: boolean
+        reserveBearing:
+          type: boolean
+        pushWorkOrder:
+          type: boolean

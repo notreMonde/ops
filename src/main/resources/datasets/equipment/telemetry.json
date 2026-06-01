@@ -1,0 +1,10 @@
+{
+  "currentTemperatureC": 92,
+  "temperatureRiseRatePerMin": 2.3,
+  "vibrationMmPerS": 4.2,
+  "baselineVibrationMmPerS": 1.8,
+  "motorCurrentStatus": "平稳，无过载",
+  "ambientTemperatureC": 26,
+  "coolingFanStatus": "正常",
+  "frequencySpectrumFinding": "高频分量增加，符合润滑不良特征"
+}

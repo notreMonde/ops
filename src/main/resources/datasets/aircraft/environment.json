@@ -1,0 +1,33 @@
+{
+  "airport": "北京大兴国际机场",
+  "currentStand": {
+    "bay": "Bay 18",
+    "standType": "远机位",
+    "hasCanopy": false,
+    "nightTemperatureC": -2
+  },
+  "hangars": [
+    {
+      "name": "2号机库",
+      "slotType": "窄体机位",
+      "available": true,
+      "distanceMeters": 300,
+      "capabilities": [
+        "顶升能力",
+        "暖气",
+        "照明",
+        "液压油加注车"
+      ]
+    },
+    {
+      "name": "3号机库",
+      "slotType": "窄体机位",
+      "available": false,
+      "occupiedBy": "C检任务",
+      "capabilities": [
+        "顶升能力",
+        "照明"
+      ]
+    }
+  ]
+}

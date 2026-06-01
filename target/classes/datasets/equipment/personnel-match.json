@@ -1,0 +1,30 @@
+{
+  "recommendedLead": "王建国",
+  "candidates": [
+    {
+      "name": "王建国",
+      "role": "精密机械维修技师",
+      "qualification": "轴承装配认证",
+      "onDuty": true,
+      "distanceMeters": 50,
+      "qualityScore": 4.9,
+      "recommended": true
+    },
+    {
+      "name": "李明辉",
+      "role": "电气维修技师",
+      "qualification": "具备电机拆装资质",
+      "onDuty": true,
+      "distanceMeters": 120,
+      "recommended": true
+    },
+    {
+      "name": "赵强",
+      "role": "设备维修工程师",
+      "qualification": "机械/电气双资质",
+      "onDuty": false,
+      "available": false,
+      "reason": "当前外出中"
+    }
+  ]
+}

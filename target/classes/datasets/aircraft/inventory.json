@@ -1,0 +1,38 @@
+{
+  "materials": [
+    {
+      "type": "航材",
+      "name": "封严组合件",
+      "partNumber": "161A1122-1",
+      "quantity": 3,
+      "unit": "套",
+      "status": "可用",
+      "location": "北京大兴航材库 A-15-02 货位",
+      "certificateValidUntil": "2027-06"
+    },
+    {
+      "type": "耗材",
+      "name": "液压油 BMS 3-11 Type IV",
+      "quantity": 999,
+      "unit": "加仑",
+      "status": "库存充足",
+      "location": "北京大兴航材库 K-09 区域"
+    }
+  ],
+  "tools": [
+    {
+      "name": "导向器组件 32-011",
+      "quantity": 1,
+      "unit": "套",
+      "status": "可用",
+      "location": "工具库 T-2 架"
+    },
+    {
+      "name": "排放工具 32-005",
+      "quantity": 2,
+      "unit": "套",
+      "status": "可用",
+      "location": "工具库 T-5 架"
+    }
+  ]
+}

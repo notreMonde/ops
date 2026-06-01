@@ -1,0 +1,37 @@
+{
+  "spareParts": [
+    {
+      "name": "7014C/P4 精密轴承",
+      "quantity": 2,
+      "unit": "套",
+      "location": "精密备件库 B区-3号柜-2层（B-03-02）",
+      "validUntil": "2027-03"
+    },
+    {
+      "name": "润滑油气喷嘴",
+      "quantity": 6,
+      "unit": "个",
+      "location": "消耗品库 C区-润滑专柜-4号抽屉（C-LL-04）"
+    }
+  ],
+  "tools": [
+    {
+      "name": "电感应加热器",
+      "quantity": 1,
+      "unit": "台",
+      "location": "工具房 T-09 号架"
+    },
+    {
+      "name": "液压拉马套装",
+      "quantity": 2,
+      "unit": "套",
+      "location": "工具房 T-12 号架"
+    },
+    {
+      "name": "流量检测仪",
+      "quantity": 1,
+      "unit": "台",
+      "location": "仪器室 I-05 号柜"
+    }
+  ]
+}

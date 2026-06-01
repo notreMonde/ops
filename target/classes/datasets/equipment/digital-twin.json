@@ -1,0 +1,13 @@
+{
+  "equipmentName": "五轴加工中心#3主轴电动机",
+  "equipmentId": "MOT-2024-A07",
+  "model": "Siemens 1PH8133",
+  "bearingModel": "7014C/P4 角接触球轴承",
+  "lubricationMode": "油气润滑",
+  "runningMode": "高速精加工（S12000）",
+  "continuousRunHours": 8.2,
+  "sensorTopology": [
+    "驱动端轴承外圈 PT100 温度传感器",
+    "驱动端轴承振动加速度传感器"
+  ]
+}

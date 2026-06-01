@@ -1,0 +1,28 @@
+{
+  "faultPattern": "起落架减震支柱渗漏",
+  "rootCauseChain": [
+    "主封严磨损",
+    "内筒划伤",
+    "封严组件老化"
+  ],
+  "recommendedAction": "首选更换封严组合件并检查内筒镜面划伤情况",
+  "linkedPartNumber": "161A1122-1",
+  "linkedConsumables": [
+    {
+      "name": "液压油 BMS 3-11 Type IV",
+      "spec": "MIL-PRF-83282"
+    }
+  ],
+  "graphEdges": [
+    {
+      "source": "渗漏",
+      "target": "主封严磨损",
+      "relation": "可能由...导致"
+    },
+    {
+      "source": "主封严磨损",
+      "target": "封严组合件 PN 161A1122-1",
+      "relation": "对应维修件"
+    }
+  ]
+}

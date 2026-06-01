@@ -1,0 +1,15 @@
+{
+  "latestMaintenance": {
+    "date": "2026-04-17",
+    "action": "更换驱动端轴承",
+    "runHoursAfterMaintenance": 320
+  },
+  "similarCases": [
+    {
+      "date": "2025-10-15",
+      "similarity": 0.89,
+      "summary": "同型号电机轴承过热，根因为油气润滑喷嘴堵塞，导致润滑不良",
+      "resolvedBy": "清洗喷嘴并恢复润滑流量"
+    }
+  ]
+}

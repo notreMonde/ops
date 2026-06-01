@@ -1,0 +1,58 @@
+{
+  "decisionSummary": "推荐立即停机，优先检查油气喷嘴与润滑流量，必要时更换备用轴承。",
+  "immediateShutdown": true,
+  "reserveBearing": true,
+  "pushWorkOrder": true,
+  "planSteps": [
+    "执行受控停机程序，关闭主轴驱动并监控惰转至停止",
+    "拆卸油气喷嘴并用流量检测仪检查，清洗或更换堵塞喷嘴",
+    "待冷却后手动盘车，检查轴承有无异响、卡滞",
+    "如评估不良，使用电感应加热器和液压拉马更换 7014C/P4 轴承",
+    "完成润滑系统全面检测后试车"
+  ],
+  "recommendedPeople": [
+    {
+      "name": "王建国",
+      "role": "主修",
+      "reason": "轴承装配认证，历史评分 4.9/5"
+    },
+    {
+      "name": "李明辉",
+      "role": "电气配合",
+      "reason": "具备电机拆装资质"
+    },
+    {
+      "name": "张主任",
+      "role": "审批协调",
+      "reason": "加工中心当班主管"
+    }
+  ],
+  "materials": [
+    {
+      "name": "润滑油气喷嘴",
+      "quantity": 1,
+      "location": "消耗品库 C区-润滑专柜-4号抽屉（C-LL-04）"
+    },
+    {
+      "name": "7014C/P4 轴承",
+      "quantity": 1,
+      "location": "精密备件库 B区-3号柜-2层（B-03-02）"
+    }
+  ],
+  "tools": [
+    {
+      "name": "电感应加热器",
+      "location": "工具房 T-09 号架"
+    },
+    {
+      "name": "液压拉马套装",
+      "location": "工具房 T-12 号架"
+    },
+    {
+      "name": "流量检测仪",
+      "location": "仪器室 I-05 号柜"
+    }
+  ],
+  "workOrderDraft": "EM-20260521-003",
+  "nextActionPrompt": "是否确认执行并下发任务？"
+}
