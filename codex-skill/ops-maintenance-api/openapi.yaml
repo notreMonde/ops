@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: 运维决策服务 API
   version: v1
-  description: 面向飞机维修和设备检修的四阶段交互式运维决策接口。调用方必须严格遵循“澄清 -> 检索 -> 执行 -> 反馈”的顺序，不得跳步，不得将后续阶段结果提前合并到当前阶段。
+  description: 面向飞机维修和设备检修的四阶段交互式运维决策接口。调用方必须严格遵循“澄清 -> 检索 -> 执行 -> 反馈”的顺序，不得跳步。澄清阶段需要单独等待确认；检索结果展示后可在同次交互中直接进入执行阶段；反馈阶段仍需等待用户选择方案。
 servers:
   - url: http://localhost:8080
 paths:
@@ -161,7 +161,7 @@ paths:
   /api/v1/aircraft/{tailNo}/workflow/retrieval:
     post:
       summary: 飞机 workflow 的检索阶段
-      description: 仅可在澄清确认完成后调用。返回检索摘要 `retrievedInfo` 与完整详情 `retrievedDetails`，完整详情直接展示不收起。本阶段不得跳到执行回执或最终反馈。
+      description: 仅可在澄清确认完成后调用。返回检索摘要 `retrievedInfo` 与完整详情 `retrievedDetails`，完整详情直接展示不收起。检索结果展示后可在同次交互中直接进入执行阶段，不需要额外确认；但不得直接跳到最终反馈。
       parameters:
         - $ref: '#/components/parameters/TailNo'
       requestBody:
@@ -189,7 +189,7 @@ paths:
   /api/v1/aircraft/{tailNo}/workflow/execution:
     post:
       summary: 飞机 workflow 的执行阶段
-      description: 仅可在检索阶段完成后调用。必须给出 2-3 个候选方案并等待用户确认或选择，不能直接输出最终回执。
+      description: 仅可在检索阶段完成并展示后调用。通常紧跟检索阶段输出，且不要求额外确认。必须给出 2-3 个候选方案并等待用户确认或选择，不能直接输出最终回执。
       parameters:
         - $ref: '#/components/parameters/TailNo'
       requestBody:
@@ -354,7 +354,7 @@ paths:
   /api/v1/equipment/{equipmentId}/workflow/retrieval:
     post:
       summary: 设备 workflow 的检索阶段
-      description: 仅可在澄清确认完成后调用。返回检索摘要 `retrievedInfo` 与完整详情 `retrievedDetails`，完整详情直接展示不收起。本阶段不得跳到执行回执或最终反馈。
+      description: 仅可在澄清确认完成后调用。返回检索摘要 `retrievedInfo` 与完整详情 `retrievedDetails`，完整详情直接展示不收起。检索结果展示后可在同次交互中直接进入执行阶段，不需要额外确认；但不得直接跳到最终反馈。
       parameters:
         - $ref: '#/components/parameters/EquipmentId'
       requestBody:
@@ -381,7 +381,7 @@ paths:
   /api/v1/equipment/{equipmentId}/workflow/execution:
     post:
       summary: 设备 workflow 的执行阶段
-      description: 仅可在检索阶段完成后调用。必须给出 2-3 个候选方案并等待用户确认或选择，不能直接输出最终回执。
+      description: 仅可在检索阶段完成并展示后调用。通常紧跟检索阶段输出，且不要求额外确认。必须给出 2-3 个候选方案并等待用户确认或选择，不能直接输出最终回执。
       parameters:
         - $ref: '#/components/parameters/EquipmentId'
       requestBody:
@@ -485,7 +485,7 @@ components:
           description: 用户已确认澄清阶段展示的基础信息。
         followUpAcknowledged:
           type: boolean
-          description: 用户已确认可以进入下一阶段继续检索。
+          description: 用户已确认可以进入后续检索/执行链路。
         selectedOptionCode:
           type: string
           description: 用户在执行阶段选定的方案编码。未选择方案时不得传入反馈阶段。
@@ -536,7 +536,7 @@ components:
           description: 用户已确认澄清阶段展示的基础信息。
         followUpAcknowledged:
           type: boolean
-          description: 用户已确认可以进入下一阶段继续检索。
+          description: 用户已确认可以进入后续检索/执行链路。
         selectedOptionCode:
           type: string
           description: 用户在执行阶段选定的方案编码。未选择方案时不得传入反馈阶段。
