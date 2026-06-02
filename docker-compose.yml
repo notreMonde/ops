@@ -1,0 +1,20 @@
+version: "3.8"
+
+services:
+  maintenance-decision-service:
+    build: .
+    image: maintenance-decision-service:latest
+    container_name: ops-service
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"

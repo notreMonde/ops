@@ -1,0 +1,23 @@
+# ===========================================================
+# 生产环境配置 (application-prod.yml)
+# 通过 spring.profiles.active=prod 激活
+# ===========================================================
+
+# 日志配置 — 生产环境减少日志输出量
+logging:
+  level:
+    root: WARN
+    com.demo.ops: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+
+# 服务器配置
+server:
+  port: 8080
+
+# Actuator 端点暴露
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info

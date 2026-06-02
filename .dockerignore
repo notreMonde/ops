@@ -1,0 +1,7 @@
+target/
+.mvn/repository/
+.idea/
+codex-skill/
+*.md
+mvnw
+mvnw.cmd

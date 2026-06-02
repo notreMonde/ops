@@ -1,9 +1,9 @@
 {
-  "recommendedLead": "孙工",
-  "recommendedReleaseInspector": "周工",
+  "recommendedLead": "孙浩然",
+  "recommendedReleaseInspector": "周凯旋",
   "candidates": [
     {
-      "name": "孙工",
+      "name": "孙浩然",
       "role": "起落架维修技师",
       "authorization": "B737NG II 类授权",
       "onDuty": true,
@@ -12,7 +12,7 @@
       "recommended": true
     },
     {
-      "name": "刘工",
+      "name": "刘志远",
       "role": "维修技师",
       "authorization": "B737NG I 类授权",
       "onDuty": true,
@@ -21,21 +21,21 @@
       "recommended": false
     },
     {
-      "name": "赵工",
+      "name": "赵文博",
       "role": "钣金/结构修理",
       "onDuty": true,
       "available": false,
       "reason": "当前有任务"
     },
     {
-      "name": "钱工",
+      "name": "钱嘉树",
       "role": "液压系统专长",
       "onDuty": false,
       "available": false,
       "reason": "夜班休息中"
     },
     {
-      "name": "周工",
+      "name": "周凯旋",
       "role": "检验员",
       "authorization": "B737 放行权限",
       "onDuty": true,
